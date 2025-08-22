@@ -23,7 +23,12 @@ app = FastAPI(title="URL Shortener", version="1.0.0", lifespan=lifespan)
 app.include_router(shortener_router)
 
 
-@app.get("/s/{code}", name="redirect_by_code", tags=["shortener"], responses={307: {"description": "Redirect to original URL"}})
+@app.get(
+    "/s/{code}",
+    name="redirect_by_code",
+    tags=["shortener"],
+    responses={307: {"description": "Redirect to original URL"}},
+)
 def redirect_by_code(code: str, db: Session = Depends(get_db)) -> RedirectResponse:
     # get link by code
     link = get_by_code(db, code)

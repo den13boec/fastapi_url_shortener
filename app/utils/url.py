@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 
 ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
+
 def is_valid_http_url(url: str) -> bool:
     try:
         p = urlparse(url.strip())
