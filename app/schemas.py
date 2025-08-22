@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 
 
 class ShortenRequest(BaseModel):
@@ -18,3 +18,8 @@ class StatsResponse(BaseModel):
     original_url: str
     clicks: int
     created_at: datetime
+
+    # searialize created_at to ISO date format
+    @field_serializer("created_at")
+    def serialize_created_at(self, value: datetime) -> str:
+        return value.date().isoformat()
