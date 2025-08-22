@@ -1,5 +1,5 @@
-from contextlib import contextmanager
-from typing import Any, Generator
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
@@ -10,8 +10,8 @@ from app.api.v1.shortener import router as shortener_router
 from app.crud.links import get_by_code, increment_clicks
 
 
-@contextmanager
-def lifespan(app: FastAPI) -> Generator[None, Any, None]:
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # create tables if not exist
     Base.metadata.create_all(bind=engine)
     yield
@@ -23,7 +23,7 @@ app = FastAPI(title="URL Shortener", version="1.0.0", lifespan=lifespan)
 app.include_router(shortener_router)
 
 
-@app.get("/s/{code}", name="redirect_by_code")
+@app.get("/s/{code}", name="redirect_by_code", tags=["shortener"], responses={307: {"description": "Redirect to original URL"}})
 def redirect_by_code(code: str, db: Session = Depends(get_db)) -> RedirectResponse:
     # get link by code
     link = get_by_code(db, code)

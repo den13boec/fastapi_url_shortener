@@ -18,7 +18,7 @@ def create_short_url(payload: ShortenRequest, request: Request, db: Session = De
     code = shorten(db, url)
     # get full short url
     short_url = str(request.url_for("redirect_by_code", code=code))
-    return ShortenResponse(code=code, short_url=short_url, original_url=url)
+    return ShortenResponse(short_url=short_url)
 
 @router.get("/stats/{code}", response_model=StatsResponse)
 def stats(code: str, db: Session = Depends(get_db)) -> StatsResponse:
@@ -27,7 +27,6 @@ def stats(code: str, db: Session = Depends(get_db)) -> StatsResponse:
     if not link:
         raise HTTPException(status_code=404, detail="Code not found")
     return StatsResponse(
-        code=link.code,
         original_url=link.original_url,
         clicks=link.clicks,
         created_at=link.created_at,
