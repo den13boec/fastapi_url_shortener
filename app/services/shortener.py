@@ -1,10 +1,13 @@
 import secrets
 from sqlalchemy.orm import Session
 from app.crud.links import get_by_code, get_by_url, create
-from app.utils.url import ALPHABET
+from string import ascii_letters, digits
 
 
 def generate_code(db: Session, length: int = 6, max_attempts: int = 1000) -> str:
+    # 52+10=62 characters
+    ALPHABET = ascii_letters + digits
+
     # generate unique short code
     for _ in range(max_attempts):
         code = "".join(secrets.choice(ALPHABET) for _ in range(length))

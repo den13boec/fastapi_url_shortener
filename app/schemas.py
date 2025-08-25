@@ -1,12 +1,13 @@
 from datetime import datetime
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, HttpUrl, field_serializer
 
 
 class ShortenRequest(BaseModel):
-    url: str = Field(
+    url: HttpUrl = Field(
         ...,
         description="Original URL to be shortened",
         examples=["https://example.com/your/very/long/url"],
+        max_length=2000,
     )
 
 

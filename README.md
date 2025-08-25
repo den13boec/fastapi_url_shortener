@@ -9,7 +9,7 @@ API-сервис для сокращения ссылок. Реализован 
 ```bash
 git clone https://github.com/den13boec/fastapi_url_shortener.git
 cd fastapi_url_shortener
-docker-compose up --build
+docker compose up --build
 ```
 
 ## Эндпойнты

@@ -4,7 +4,6 @@ from app.database import get_db
 from app.schemas import ShortenRequest, ShortenResponse, StatsResponse
 from app.crud.links import get_by_code
 from app.services.shortener import shorten
-from app.utils.url import is_valid_http_url
 
 router = APIRouter(prefix="/api/v1", tags=["shortener"])
 
@@ -13,12 +12,7 @@ router = APIRouter(prefix="/api/v1", tags=["shortener"])
 def create_short_url(
     payload: ShortenRequest, request: Request, db: Session = Depends(get_db)
 ) -> ShortenResponse:
-    # validate url format
-    url = payload.url.strip()
-    if not is_valid_http_url(url):
-        raise HTTPException(
-            status_code=400, detail="Invalid URL format (expected http(s)://...)"
-        )
+    url = str(payload.url)
     # get short code (or create new one if it doesn't exist)
     code = shorten(db, url)
     # get full short url
